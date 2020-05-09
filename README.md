@@ -11,5 +11,5 @@ languages used were
 resource's used were
 youtube,classmates projects, help from TA's
 
-Deployed Website URL: 
+Deployed Website URL: https://kevinpegueroo.github.io/Weather-Dashboard/
 
