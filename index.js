@@ -18,7 +18,7 @@ if (localStorage.getItem('localHistory')) {
 } else {
     var localHistory = [];
 }
-console.log(localHistory)
+
 
 searchButton.click(function(e) {
     e.preventDefault()
@@ -26,13 +26,25 @@ searchButton.click(function(e) {
     currentCard = weatherCard1;
     getCurrentWeather(city)
     getForecast(city)
-    localStorage.setItem("last-search",city)
-    if (!($('button').hasClass(`${city}`))){
-        localHistory.push(`${city}`)
-        localStorage.setItem("localHistory", JSON.stringify(localHistory))
+    if(localHistory.indexOf(city) === -1){
+        localStorage.setItem("last-search",city)
+        if (!($('button').hasClass(`${city}`))){
+            
+            localHistory.push(`${city}`)
+            localStorage.setItem("localHistory", JSON.stringify(localHistory))
+        }  
     }
+   
     loadHistory(city)
 })
+historyEl.click(function(e){
+    var city = e.target.innerText
+    getCurrentWeather(city)
+    getForecast(city)
+    
+})
+
+
 
 function getCurrentWeather(city) {
     $.ajax({
@@ -61,20 +73,21 @@ function getCurrentWeather(city) {
 
         }).then(function (response) {
             currentWeather.append(
-                $(`<h3>${response.value}`)
+                $(`<h3>UV Index ${response.value}</h3>`)
             )
         })
     })
 }
 
 function getForecast(city) {
+    currentCard = weatherCard1
     $.ajax({
         url: `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&APPID=1c7ba168ec80866d4c17db02597dbb6f`,
         method: "GET"
 
     }).then(function (response) {
         emptyCard();
-        for (let i = 0; i < 40; i += 8) {
+        for (let i = 0; i < 40; i += 1) {
             currentCard.addClass('border')
             currentCard.append(
                 $(`<p>${response.city.name}</p>`),
@@ -87,7 +100,7 @@ function getForecast(city) {
 
             )
             currentCard = currentCard.next();
-            console.log(currentCard)
+            
 
         }
     })
